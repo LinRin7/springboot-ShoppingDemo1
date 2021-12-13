@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- 新 Bootstrap4 核心 CSS 文件 -->
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+<!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+<script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+<!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+<script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<title>員工登入</title>
+    <!-- Bootstrap core CSS -->
+<link href="/bootstrap4/bootstrap.css" rel="stylesheet">
+
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="/bootstrap4/signin.css" rel="stylesheet">
+  </head>
+  <body class="text-center">
+    <form class="form-signin" onsubmit="return login();">
+  <img class="mb-4" src="/bootstrap4/bootstrap-solid.svg" alt="" width="72" height="72">
+  <h1 class="h3 mb-3 font-weight-normal">員工登入</h1>
+  <label for="username" class="sr-only">User Name</label>
+  <input type="text" id="username" class="form-control" placeholder="User Name" required autofocus>
+  <label for="password" class="sr-only">Password</label>
+  <input type="password" id="password" class="form-control" placeholder="Password" required>
+  <div class="checkbox mb-3">
+    <label>
+      <input type="checkbox" value="remember-me"> Remember me
+    </label>
+  </div>
+  <!-- <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button> -->
+  <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+  <p class="mt-5 mb-3 text-muted">&copy; Smile</p>
+</form>
+
+<script type="text/javascript">
+
+function login(){
+
+	$.ajax({
+		type:"POST",
+		url:"/staff/staffCenter",
+		data:{"username" : $("#username").val(), "password" : $("#password").val()},
+		dataType:"json",
+		cache:"false",
+		success:function(data){
+			if(data.result == "success"){
+				alert("admin");
+				location.href="/staff/staffCenter";
+			}else if(data.result == "failed"){
+				alert("輸入錯誤");
+			}
+		},
+		error:function(shr, ajaxOptions, thrownError){
+			alert(xhr.status);
+			
+		}
+	});
+	return false;
+}
+
+</script>
+
+</body>
+</html>

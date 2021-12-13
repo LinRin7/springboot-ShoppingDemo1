@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- 新 Bootstrap4 核心 CSS 文件 -->
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+<!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+<script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+<!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+<script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+<h2>搜尋會員</h2>
+<div class="form-group">
+<form onsubmit="return search();" id="searchMemberForm">
+<div class="form-group">
+    <label for="name">輸入欲搜尋會員的姓名</label>
+    <input type="text" class="form-control" id="name" name="name">
+  </div>
+<button type="submit" class="btn btn-primary">Submit</button>
+</form>
+</div>
+
+<div class="row">
+<div class="col" id="memberList"></div>
+<div class="col" id="orderList"></div>
+<div class="col" id="orderDetails"></div>
+</div>
+</div>
+
+
+
+<script type="text/javascript">
+
+function search(){
+
+	alert("查詢會員");
+	$.ajax({
+		type:"post",
+		url:"/staff/searchMember",
+		data:{"name" : $("#name").val()},
+		dataType:"json",
+		cache:"false",
+		success:function(data){ //Member -> list型態
+			var html="";
+			if(data.length == 0){
+				alert("查無該會員");
+			}else{
+				
+				html = html + "<table>";
+				html = html + "<tr><th>會員ID</th><th>會員姓名</th><th>查看購物紀錄</th></tr>";
+				
+				for(var i=0; i<data.length; i++){
+					html = html + "<tr>";
+					html = html + "<td>" + data[i].id + "</td>";
+					html = html + "<td>" + data[i].name + "</td>";
+					html = html + "<td><input type='button' class='btn btn-outline-info' value='點擊查看'"+
+									"onclick='showOrder(" + data[i].id +")'/></td>";
+					html = html + "</tr>";
+				}
+				html+="</table>";
+			}
+			$("#orderDetails").html("");
+			$("#orderList").html("");
+			$("#memberList").html(html);
+		},
+		error:function(shr, ajaxOptions, thrownError){
+			alert(xhr.status);
+		}
+	});
+	return false;
+}
+
+function showOrder(id){
+	alert("查詢訂單");
+	$.ajax({
+		type:"POST",
+		url:"/staff/searchMemberOrder/" + id,
+		dataType:"json",
+		cache:"false",
+		success:function(data){//Order -> list
+			var html = "";
+			if(data.length == 0){
+				$("#orderList").html("<h2>無購物紀錄</h2>");
+			}else{
+				
+				html += "<table>";
+				for(var i=0; i<data.length; i++){
+					html += "<tr><td><input type='button' class='btn btn-outline-info' value='第" + (i+1);
+					html += "筆訂單' onclick='show(\"" + data[i].id + "\")'/></td></tr>";
+				}
+				html += "</table>";
+				$("#orderList").html(html);
+			}
+			$("#orderDetails").html("");
+			
+		},
+		error:function(xhr, ajaxOptions, thrownError){
+			alert("error");
+			alert(xhr.status);
+		}
+	});
+}
+
+function show(id){
+	alert("查詢訂單內容" + id);
+	$.ajax({
+		type:"post",
+		url:"/member/queryMemberOrder/" + id,
+		dataType:"json",
+		cache:"false",
+		success:function(data){
+			
+			alert("success");
+			var html="";
+			var total = 0;
+			html += "<table border='1'>"+
+	        		"<thead>"+
+	        		"<tr>"+
+					"<th>Id</th>"+
+					"<th>Name</th>"+
+					"<th>Photo</th>"+
+					"<th>Price</th>"+
+					"<th>Quantity</th>"+
+					"<th>Sub Total</th>"+
+					"</tr>"+
+					"</thead>"+
+					"<tbody>";
+			for(var i=0; i<data.length; i++){
+				total+=data[i].product.price*data[i].quantity;
+				html+="<tr>";
+				html+="<td>" + data[i].product.id + "</td>";
+				html+="<td>" + data[i].product.name + "</td>";
+				html+="<td><img src='"+data[i].product.image+"' width='300' height='400'>" + "</td>";
+				html+="<td>" + data[i].product.price + "</td>";
+				html+="<td>" + data[i].quantity + "</td>";
+				html+="</tr>";
+			}
+			html += "</tbody>"+
+					"<tfoot>"+
+			  		"<tr>"+
+					"<td colspan='5' align='right'>Sum</td>"+
+					"<td>" + total + "</td>"+
+					"</tr>"+
+					"</tfoot>"+
+	      			"</table>";
+			$('#orderDetails').html(html);
+		},
+		error:function(xhr, ajaxOptions, thrownError){
+			alert("error");
+			alert(xhr.status);
+		}
+	});
+}
+
+</script>
+
+</body>
+</html>

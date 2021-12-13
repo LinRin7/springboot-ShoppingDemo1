@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- 新 Bootstrap4 核心 CSS 文件 -->
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+<!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+<script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+<!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+<script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<title>會員註冊</title>
+</head>
+<body>
+
+<div class="container">
+  <h2>會員註冊</h2>
+  <form id="registerform" onsubmit="register()">
+    <div class="form-group">
+      <label for="name">請輸入姓名:</label>
+      <input type="text" class="form-control" id="name" placeholder="Enter name">
+    </div>
+    <div class="form-group">
+      <label for="username">請輸入帳號:</label>
+      <input type="text" class="form-control" id="username" >
+    </div>
+    <div class="form-group">
+      <label for="password">請輸入密碼:</label>
+      <input type="password" class="form-control" id="password">
+    </div>
+    <div class="form-group">
+      <label for="email">請輸入電子郵件:</label>
+      <input type="email" class="form-control" id="email">
+    </div>
+    
+    <div class="form-check">
+      <label class="form-check-label">
+        <input class="form-check-input" type="checkbox">我同意遵守相關規定
+      </label>
+    </div>
+    <button type="submit" class="btn btn-primary">提交</button>
+  </form>
+</div>
+
+<script type="text/javascript">
+
+function register(){
+
+	$.ajax({
+		type:"POST",
+		url:"/member/register",
+		data:{"name":$("#name").val(), "username":$("#username").val(),
+			"password":$("#password").val(), "email":$("#email").val()},
+		dataType:"json",
+		success:function(data){
+			if(data.result == "success"){
+				//alert("註冊成功");
+				alert(data.msg);
+				location.href = "/shopping/";
+				
+			}else{
+				alert("註冊失敗\n"+data.msg);
+				//可標註哪裡錯誤
+			}
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+	    	alert(xhr.status);
+	        alert(thrownError);
+	    }
+	});
+}
+
+</script>
+</body>
+</html>

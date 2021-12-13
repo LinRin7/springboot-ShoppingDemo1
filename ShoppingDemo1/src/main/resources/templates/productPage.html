@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- 新 Bootstrap4 核心 CSS 文件 -->
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+<!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+<script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+<!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+<script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+<div class="container">
+    <div class="row-fluid align-items-center">
+        <div class="span12">
+            <table class="table table-striped table-bordered">
+				
+				<thead>
+				<tr>
+				<th scope="col">圖</th>
+      			
+      			<th scope="col">商品名稱</th>
+      			<th scope="col">商品描述</th>
+      			<th scope="col">動作</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr th:each="item : ${page.content}">
+					<td><img th:src="@{${item.image}}" width="300" height="400"></td>
+                    
+                    <td th:text="${item.name}">name</td>
+					<td th:text="${item.description}">description</td>
+
+                    <td>
+                        <button th:onclick="toCart([[${item.id}]])" class="btn btn-outline-info">放入購物車</button>
+                    </td>
+                </tr>
+				</tbody>
+                
+                
+            </table>
+
+        </div>
+
+        <div class=" align-items-end">
+            <button class="btn" th:onclick="productPage(0)">[首頁]</button>
+            <button class="btn" th:if="${not page.isFirst()}" th:onclick="productPage([[${page.number-1}]])">[上頁]</button>
+            <button class="btn" th:if="${page.number-2 >= 0}" th:text="${page.number-1}" th:onclick="productPage([[${page.number-2}]])"></button>
+            <button class="btn" th:if="${page.number-1 >= 0}" th:text="${page.number}" th:onclick="productPage([[${page.number-1}]])"></button>
+            <button th:text="${page.number+1}" disabled></button>
+            <button class="btn" th:if="${page.number+1 < page.totalPages}" th:text="${page.number+2}" th:onclick="productPage([[${page.number+1}]])"></button>
+            <button class="btn" th:if="${page.number+2 < page.totalPages}" th:text="${page.number+3}" th:onclick="productPage([[${page.number+2}]])"></button>
+            <button class="btn" th:if="${not page.isLast()}" th:onclick="productPage([[${page.number+1}]])">[下頁]</button>
+            <button class="btn" th:onclick="productPage([[${page.totalPages-1}]])">[末頁]</button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+function productPage(pageNum){
+	alert(pageNum);
+	$.ajax({
+		type:"GET",
+		//url:"/product/productList?start=" + pageNum,
+		url:"/product?start=" + pageNum,
+		cache:"false",
+		dataType:"html",
+		success:function(data){
+			alert("success");
+			//$("#pagetext").html(data);
+			$("#productList").html(data);
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+        }
+	});
+}
+
+function toCart(id){
+	alert(id);
+	$.ajax({
+		type:"GET",
+		url:"/product/buy/" + id,
+		cache:"false",
+		dataType:"html",
+		success:function(data){
+			alert("success");
+			//$("#pagetext").html(data);
+			$("#productList").html(data);
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+        }
+	});
+}
+
+</script>
+
+</body>
+</html>

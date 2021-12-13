@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- 新 Bootstrap4 核心 CSS 文件 -->
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+<!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+<script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+<!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+<script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<title>結帳</title>
+</head>
+<body>
+
+<div class="container">
+<p></p>
+<table>
+	<tr>
+		<td>購物人姓名</td>
+		<td colspan="3" th:text="${session.user.name}"></td>
+	</tr>
+	<tr>
+		<td colspan="4">購物明細</td>
+	</tr>
+	<tr>
+		<th>商品圖片</th>
+		<th>商品名稱</th>
+		<th>商品單價</th>
+		<th>購買數量</th>
+		<th>金額</th>
+	</tr>
+	<tr th:each="item : ${session.cart}">
+		<td th:src="@{${item.product.image}}">圖1</td>
+		<td th:text="${item.product.name}">商品1</td>
+		<td th:text="${item.product.price}">價格1</td>
+		<td th:text="${item.quantity}">數量1</td>
+		<td th:text="${item.product.price} * ${item.quantity}">總價1</td>
+	</tr>
+	<tr>
+		<td>總金額</td>
+		<td th:text="${session.total}">總金額1</td>
+	</tr>
+</table>
+
+<div>
+	<button th:onclick="shopping()">返回，繼續購物</button>
+	<button th:onclick="orderDecide()" >確定下單</button>
+</div>
+
+</div>
+
+
+<script type="text/javascript">
+
+function shopping(){
+	alert("繼續購物");
+	$.ajax({
+		type:"GET",
+		url:"/product",
+		cache:"false",
+		dataType:"html",
+		success:function(data){
+			alert("success");
+			$("#productList").html(data);
+		},
+		error:function(xhr, ajaxOptions, thrownError){
+			error(xhr.status);
+		}
+	});
+}
+
+function orderDecide(){
+	alert("確定下單");
+	$.ajax({
+		type:"GET",
+		url:"/product/orderDecide",
+		cache:"false",
+		dataType:"html",
+		success:function(data){
+			alert("success");
+			$("#productList").html(data);
+		},
+		error:function(xhr, ajaxOptions, thrownError){
+			alert(xhr.status);
+		}
+	});
+}
+
+</script>
+
+</body>
+</html>

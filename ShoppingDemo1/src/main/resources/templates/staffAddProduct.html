@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- 新 Bootstrap4 核心 CSS 文件 -->
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+<!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+<script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+<!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+<script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<form id="uploadForm" onsubmit="return upload();" enctype="multipart/form-data">
+  <div class="form-group">
+    <label for="name">商品名稱</label>
+    <input type="text" class="form-control" id="name" name="name" placeholder="輸入商品名稱" required>
+  </div>
+    <div class="form-group">
+    <label for="publisher">商品出版商</label>
+    <input type="text" class="form-control" id="publisher" name="publisher" placeholder="輸入商品出版商" required>
+  </div>
+  <div class="form-group">
+    <label for="type">商品類型</label>
+      <select class="form-control" id="type" name="type">
+	  <option value="figyua">模型</option>
+	  <option value="manga">漫畫</option>
+	  <option value="novel">小說</option>
+	  <option value="game">遊戲</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="description">產品描述</label>
+    <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+  </div>
+    <div class="form-group">
+    <label for="price">商品價格</label>
+    <input type="number" class="form-control" id="price" name="price" placeholder="0" required>
+  </div>
+    <div class="form-group">
+    <label for="_image">上傳圖檔</label>
+    <input type="file" class="form-control-file" id="_image" name="_image" required>
+  </div>
+  <button type="submit" class="btn btn-primary">上傳商品</button>
+</form>
+<p>圖片:</p> 
+<div id="img">
+</div>
+
+
+<!-- <h1 >圖片上傳Demo</h1>
+<form action="fileUpload" method="post" enctype="multipart/form-data">
+<p>選擇檔案: <input type="file" name="fileName"/></p>
+<p><input type="submit" value="提交"/></p>
+</form> -->
+
+
+<script type="text/javascript">
+
+function upload(){
+	// 取得form
+    var form = $('#uploadForm')[0];
+    var data = new FormData(form); //將form內的所有訊息打包成FormData object
+	$.ajax({
+		type:"post",
+		enctype: 'multipart/form-data', //將資料加密傳輸 檔案上傳一定要有的屬性
+		url:"/staff/productUpload",
+		data:data,
+		processData: false, //防止jquery將data變成query String
+		contentType: false, // jQuery預設contentType為'application/x-www-form-urlencoded; charset=UTF-8', 且不用自己設定為'multipart/form-data'
+		cache:"false",
+		success:function(data){
+			if(data.result == "success"){
+				alert("success");
+				$("#img").html("<img th:src='@{" + data.fileName + "}' width='800' height='600'>");
+			}
+		},
+		error:function(shr, ajaxOptions, thrownError){
+			alert(xhr.status);
+		}
+	});
+	return false;
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- 新 Bootstrap4 核心 CSS 文件 -->
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+<!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+<script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+<!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+<script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<title>員工</title>
+<!-- Bootstrap core CSS -->
+<link href="/bootstrap4/bootstrap.css" rel="stylesheet">
+
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="/bootstrap4/starter-template.css" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">員工 <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" onclick="productView()">查看商品</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" onclick="addProduct()">新增商品</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" onclick="memberView()">查看會員</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+        <div class="dropdown-menu" aria-labelledby="dropdown01">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<main role="main" class="container">
+
+  <div class="starter-template" id="content">
+    
+  </div>
+
+
+</main><!-- /.container -->
+      <script src="/bootstrap4/bootstrap.bundle.js"></script>
+
+<script type="text/javascript">
+
+function productView(){
+	alert("查看所有商品");
+	$.ajax({
+		type:"GET",
+		url:"",
+		dataType:"html",
+		cache:"false",
+		success:function(data){
+			
+		},
+		error:function(shr, ajaxOptions, thrownError){
+			alert(xhr.status);
+		}
+	});
+		
+}
+
+function addProduct(){
+	alert("新增商品");
+	$.ajax({
+		type:"GET",
+		url:"/staff/addProduct",
+		dataType:"html",
+		cache:"false",
+		success:function(data){
+			$("#content").html(data);
+		},
+		error:function(shr, ajaxOptions, thrownError){
+			alert(xhr.status);
+		}
+	});
+}
+
+function memberView(){
+	alert("查看所有會員");
+	$.ajax({
+		type:"GET",
+		url:"/staff/memberManage",
+		dataType:"html",
+		cache:"false",
+		success:function(data){
+			$("#content").html(data);
+		},
+		error:function(shr, ajaxOptions, thrownError){
+			alert(xhr.status);
+		}
+	});
+}
+
+</script>
+
+</body>
+</html>

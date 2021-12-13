@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- 新 Bootstrap4 核心 CSS 文件 -->
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+<!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+<script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+<!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+<script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<title>更改會員資料</title>
+</head>
+<body>
+
+
+<div class="container">
+<h2>更改會員資料</h2><br>
+<!--<form th:action="@{/member/updateMemberData}" method="post">
+ <input type="hidden" name="_method" value="put"/> -->
+ <form onsubmit="return updateData();">
+  <div class="form-group">
+    <label>姓名</label>
+    <input type="text" class="form-control" id="name" th:if="${session.user}!=null" th:value="${session.user.name}" required>
+  </div>
+  <div class="form-group">
+    <label>帳號</label>
+    <input type="text" class="form-control" id="username" th:if="${session.user}!=null" th:value="${session.user.username}" readonly>
+  </div>
+  <div class="form-group">
+    <label for="email">請輸入電子郵件</label>
+    <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email"
+    		th:if="${session.user}!=null" th:value="${session.user.email}" required>
+  </div>
+  <!-- <div class="form-group form-check">
+    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+    <label class="form-check-label" for="exampleCheck1">是否更改密碼</label>
+    </div> -->
+  
+    <div>
+    <label for="inputPassword1">請輸入新密碼</label>
+    <input type="password" class="form-control" id="inputPassword1" placeholder="Password">
+  
+  </div>
+  <div class="form-group">
+    <label for="password">請再輸入一次新密碼</label>
+    <input type="password" class="form-control" id="password" placeholder="Password">
+  </div>
+
+  <div class="row">
+  	<div class="col">
+  	  <button class="btn btn-primary" th:href="@{/member/memberCenter}">返回</button>
+  	  <!-- <button class="btn btn-primary" type="submit">提交</button> -->
+  	  <button class="btn btn-primary" >更改資料</button>
+  	</div>
+
+  </div>
+  
+</form>
+</div>
+			
+<script type="text/javascript">
+function updateData(){
+	if($("#name").val() == null){
+		alert("姓名不得為空");
+	}else if($("#email").val() == null){
+		alert("Email不得為空");
+	}else if($("#inputPassword1").val()==null || $("#password").val()==null){
+		alert("密碼欄位");
+	}else if(!$("#inputPassword1").val()==($("#password").val())){
+		alert("新密碼輸入不相符");
+	}else{//更新資料
+		var jsonstr = {"name":$("#name").val(),"username":$("#username").val(),
+				"email":$("#email").val(), "password":$("#password").val()};
+		$.ajax({
+			type:"put",
+			url:"/member/updateMemberData",
+			contentType:"application/json",
+			data:JSON.stringify(jsonstr),//將參數轉為json
+			dataType:"json",
+			cache:"false",
+			success:function(data){
+				if(data.msg == "success"){
+					alert("更新成功\n跳回主頁面並重新登入");
+					location.href="/shopping/";
+				}else{
+					alert("弄錯");
+				}
+					
+			},
+			error:function(xhr, ajaxOptions, thrownError){
+				alert(xhr.status);
+				}
+		});
+	}
+	return false;
+	
+}
+</script>
+
+</body>
+</html>
