@@ -2,7 +2,9 @@
 SpringBoot practice
 
 模擬簡易購物流程<br>
-資料庫:MySQL
+資料庫:MySQL<br>
+框架:Spring boot<br>
+ROM持久層:spring data jpa<br>
 
 功能以下<br>
 訪客:
